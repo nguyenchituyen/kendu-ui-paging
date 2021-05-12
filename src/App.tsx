@@ -36,6 +36,7 @@ const App = () => {
       }
 
       const pagerNumberNode = document.querySelector('.k-pager-numbers.k-reset')
+      const currentPage = pageState.skip/pageState.take + 1
       if(pagerNumberNode?.firstChild && pagerNumberNode?.firstChild.hasChildNodes()) {
         const href = pagerNumberNode.firstChild.childNodes[0] as HTMLHRElement
         if (href.innerText === '...') {
@@ -53,7 +54,6 @@ const App = () => {
           pagerNumberNode.insertBefore(li,pagerNumberNode.firstChild)
         } else if(href.innerText === '1') {
           const firstChild = pagerNumberNode.firstChild.childNodes[0] as HTMLElement
-          const currentPage = pageState.skip/pageState.take + 1
           if(firstChild.classList.value === "k-link k-pager-first" && currentPage <= pageState.buttonCount) {
             if(pagerNumberNode?.firstChild.parentNode) {
               pagerNumberNode?.firstChild?.parentNode.removeChild(pagerNumberNode?.firstChild)
@@ -69,28 +69,27 @@ const App = () => {
           // Insert goToLastPageNode
           const li = document.createElement('li');
           const anchor = document.createElement('a');
-          anchor.classList.add('k-link');
+          anchor.classList.add('k-link', 'k-pager-last');
           anchor.title = "Go to the last page";
           anchor.href = '#';
-          anchor.innerText = `${totalPages}`;
+          anchor.innerText = totalPages.toString();
           anchor.onclick = () => {
             setPageState({ ...pageState, skip: (totalPages -1) * pageState.take, take: pageState.take })
           };
           li.appendChild(anchor);
           pagerNumberNode.appendChild(li)
-        } else if(href.innerText === `${totalPages}`) {
-          console.log('>>>>>>>>11111>>>>>>>>>', href.innerText)
+        } else if(href.innerText === totalPages.toString() && totalPages- currentPage < pageState.buttonCount) {
+          const lastNode = pagerNumberNode.querySelector('.k-link.k-pager-last')
+          if(lastNode?.parentNode) {
+            pagerNumberNode.removeChild(lastNode.parentNode)
+          }
         }
       }
     }, [pageState.skip, pageState.take, pageState])
 
-    
-
     const handlePageChange = (event: PageChangeEvent) => {
         const { skip, take } = event;
         setPageState({ ...pageState, skip: skip, take: take })
-
-        console.log(`Page Change: skip ${skip}, take ${take}`);
     };
 
     // console.log(products.slice(skip, skip + take));
