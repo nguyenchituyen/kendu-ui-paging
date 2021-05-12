@@ -42,7 +42,7 @@ const App = () => {
           // Insert goToFirstPageNode
           const li = document.createElement('li');
           const anchor = document.createElement('a');
-          anchor.classList.add('k-link', 'k-pager-nav', 'k-pager-first');
+          anchor.classList.add('k-link', 'k-pager-first');
           anchor.title = "Go to the first page";
           anchor.href = '#';
           anchor.innerText = '1';
@@ -54,7 +54,7 @@ const App = () => {
         } else if(href.innerText === '1') {
           const firstChild = pagerNumberNode.firstChild.childNodes[0] as HTMLElement
           const currentPage = pageState.skip/pageState.take + 1
-          if(firstChild.classList.value === "k-link k-pager-nav k-pager-first" && currentPage <= pageState.buttonCount) {
+          if(firstChild.classList.value === "k-link k-pager-first" && currentPage <= pageState.buttonCount) {
             if(pagerNumberNode?.firstChild.parentNode) {
               pagerNumberNode?.firstChild?.parentNode.removeChild(pagerNumberNode?.firstChild)
             } 
@@ -62,14 +62,14 @@ const App = () => {
         }
       }
       
+      const totalPages = Math.ceil(total/pageState.take)
       if(pagerNumberNode?.lastChild && pagerNumberNode?.lastChild.hasChildNodes()) {
         const href = pagerNumberNode.lastChild.childNodes[0] as HTMLHRElement
         if (href.innerText === '...') {
           // Insert goToLastPageNode
-          const totalPages = Math.ceil(total/pageState.take)
           const li = document.createElement('li');
           const anchor = document.createElement('a');
-          anchor.classList.add('k-link', 'k-pager-nav', 'k-pager-last');
+          anchor.classList.add('k-link');
           anchor.title = "Go to the last page";
           anchor.href = '#';
           anchor.innerText = `${totalPages}`;
@@ -78,9 +78,11 @@ const App = () => {
           };
           li.appendChild(anchor);
           pagerNumberNode.appendChild(li)
+        } else if(href.innerText === `${totalPages}`) {
+          console.log('>>>>>>>>11111>>>>>>>>>', href.innerText)
         }
       }
-    }, [skip, take, pageState])
+    }, [pageState.skip, pageState.take, pageState])
 
     
 
